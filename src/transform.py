@@ -7,14 +7,11 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 
-jdbcUrl = "jdbc:oracle:thin:@localhost:1521/XE"  # Replace with your Oracle XE DB details
+jdbcUrl = "jdbc:oracle:thin:@localhost:1521/XE"
 username = "sys as sysdba"
 password = "root"
 driver = "oracle.jdbc.driver.OracleDriver"
 
-
-# Define the regex pattern for the log
-logPattern = r'^(\S+) - (\d+) \[(.+?)\] "(GET|POST) (\S+) HTTP/1.[0-1]" (\d{3}) (\d+) "(.*?)" "(.*?)"'
 
 fields = ["ip_address", "user_id", "request_timestamp", "request_method", "requested_resource", "status_code", "object_size", "url", "browser"]
 
@@ -33,12 +30,13 @@ logs_df = raw_logs_df.withColumn("ip_address", regexp_extract("value", r"^(\S+)"
     .withColumn("object_size", regexp_extract("value", r"\s(\d+|-)\s", 1)) \
     .withColumn("url", regexp_extract("value", r'"(http[s]?://\S+)"', 1)) \
     .withColumn("browser", regexp_extract("value", r'"([^"]+)"$', 1))
-# Drop the original 'value' column with raw log string data
+
 logs_df = logs_df.withColumn("object_size", when(col("object_size") == "-", "0").otherwise(col("object_size")))
 
-# Show results
-final_df = logs_df.drop('value').show(truncate=False)
+# print schema
 logs_df.printSchema()
+
+# Drop the original 'value' column with raw log string data
 final_df = logs_df.drop('value')
 
 table_name = "user_requests"
