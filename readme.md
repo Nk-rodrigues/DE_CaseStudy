@@ -17,6 +17,8 @@ Execute the script with the following command from the project root directory:
 
 python src/transform.py
 
+## Database Setup
+Execute schema/user_requests.sql to create the required DB table.
 
 ## Steps Performed by the Script
 1. Initialize environment variables.
