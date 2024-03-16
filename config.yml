@@ -1,0 +1,11 @@
+spark:
+  app_name: LogParser
+  jars: JDBC/ojdbc8.jar
+
+database:
+  jdbc_url: jdbc:oracle:thin:@localhost:1521/XE
+  user: system
+  driver: oracle.jdbc.driver.OracleDriver
+
+log_files_path: logs/logs/*.log
+table_name: user_requests
